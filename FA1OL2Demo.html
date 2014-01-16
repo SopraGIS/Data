@@ -5,59 +5,52 @@
         <title>OpenLayers: Sample</title>
         <script src="http://openlayers.org/api/OpenLayers.js"></script>
         <script type="text/javascript">
-          function init() {
+            function init() {
 
-            var extEngland = [80000,10000,655000,675000];
-            var extCrewe = [300000,300000,350000,350000];
+                var extEngland = [80000,10000,655000,675000];
+                var extCrewe = [300000,300000,350000,350000];
+                var tms = new OpenLayers.Layer.TMS("OSM GB", "http://www.osmgb.org.uk/ogc/tms27700/", {
+                    layername: "OSMGB:__all__",
+                    type: "png"
+                  }
+                );
+                var options = {
+                    projection: new OpenLayers.Projection("EPSG:27700"), 
+                    //  bounds & resolutions as defined in TMS service XML config
+                    maxExtent: new OpenLayers.Bounds(0,0,716800.0,1433600.0),
+                    resolutions: [2800,1400,700,350,175,84,42,21,11.2,5.6,2.8,1.4,0.7,0.35,0.14,0.07]
+                }
+                var map = new OpenLayers.Map('map', options );
+                map.addLayer(tms);
+                map.zoomToExtent(extCrewe);
 
-            var tms = new OpenLayers.Layer.TMS("OSM GB", "http://www.osmgb.org.uk/ogc/tms27700/", {
-                layername: "OSMGB:__all__",
-                type: "png"
-              }
-            );
-
-            var options = {
-                projection: new OpenLayers.Projection("EPSG:27700"), 
-                //  bounds & resolutions as defined in TMS service XML config
-                maxExtent: new OpenLayers.Bounds(0,0,716800.0,1433600.0),
-                resolutions: [2800,1400,700,350,175,84,42,21,11.2,5.6,2.8,1.4,0.7,0.35,0.14,0.07]
-            }
-            var map = new OpenLayers.Map('map', options );
-
-
-            
-            map.addLayer(tms);
-            map.zoomToExtent(extCrewe);
-            setTimeout(function(){
-                //  zoom to england
-                map.zoomToExtent(extEngland);
                 setTimeout(function(){
-                    //  show england extent graphic
-                    var bounds = new OpenLayers.Bounds(extEngland); 
-                    var boxes = new OpenLayers.Layer.Boxes("boxes");
-                    var box = new OpenLayers.Marker.Box(bounds);
-                    boxes.addMarker(box);
-                    map.addLayer(boxes);
+                    //  zoom to england
+                    map.zoomToExtent(extEngland);
                     setTimeout(function(){
-                        //  Add some markers
-                        var vectors = new OpenLayers.Layer.Vector("Vector Layer");
-                        var Point = OpenLayers.Geometry.Point;
-                        var Vector = OpenLayers.Feature.Vector;
-                        vectors.addFeatures([
-                            new Vector(new Point(355000,350000)),
-                            new Vector(new Point(415000,550000)),
-                            new Vector(new Point(405000,250000)),
-                            new Vector(new Point(555000,150000))
-                        ]);
-                        map.addLayer(vectors);
-                    },2000)                    
-                },2000)
-            },2000);
-            map.setBaseLayer(tms);
-
-
+                        //  show england extent graphic
+                        var bounds = new OpenLayers.Bounds(extEngland); 
+                        var boxes = new OpenLayers.Layer.Boxes("boxes");
+                        var box = new OpenLayers.Marker.Box(bounds);
+                        boxes.addMarker(box);
+                        map.addLayer(boxes);
+                        setTimeout(function(){
+                            //  Add some markers
+                            var vectors = new OpenLayers.Layer.Vector("Vector Layer");
+                            var Point = OpenLayers.Geometry.Point;
+                            var Vector = OpenLayers.Feature.Vector;
+                            vectors.addFeatures([
+                                new Vector(new Point(355000,350000)),
+                                new Vector(new Point(415000,550000)),
+                                new Vector(new Point(405000,250000)),
+                                new Vector(new Point(555000,150000))
+                            ]);
+                            map.addLayer(vectors);
+                        },2000)                    
+                    },2000)
+                },2000);
+                map.setBaseLayer(tms);
             }
-
         </script>
     </head>
     <body onload="init()">
